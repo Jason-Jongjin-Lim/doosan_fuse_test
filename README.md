@@ -1,6 +1,5 @@
-# Spring Boot and Camel REST / SQL QuickStart
+# Doosan OpenShift 3scale Fuse PoC API Proxy
 
-This example demonstrates how to use SQL via JDBC along with Camel's REST DSL to expose a RESTful API.
 
 ### Building
 
