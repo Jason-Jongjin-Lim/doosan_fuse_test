@@ -1,0 +1,20 @@
+spec:
+  replicas: 1
+  template:
+    spec:
+      containers:
+        - 
+          resources:
+            requests:
+              cpu: "0.2"
+              memory: 256Mi
+            limits:
+              cpu: "1.0"
+              memory: 256Mi
+          env:
+          - name: SPRING_APPLICATION_JSON
+            value: '{"server":{"undertow":{"io-threads":1, "worker-threads":2 }}}'
+          - name: GOOGLE_API_KEY
+            value: 'AIzaSyCTK8TCA0-czKXZieYrgfZV5Qt2YSW0Iuk'
+          - name: AZURE_API_KEY
+            value: 'e9de70e2fef54f65acf3d39ac1b9e362'

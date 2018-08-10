@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans" xmlns:spring="http://camel.apache.org/schema/spring"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="        http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd        http://camel.apache.org/schema/spring       http://camel.apache.org/schema/spring/camel-spring.xsd">
+
+  <sslContextParameters id="sslContextParameters" xmlns="http://camel.apache.org/schema/spring">
+    <keyManagers keyPassword="123456">
+      <keyStore resource="KeyStore.jks"/>
+    </keyManagers>
+    <trustManagers>
+      <keyStore resource="KeyStore.jks"/>
+    </trustManagers>
+  </sslContextParameters>
+
+  <camelContext id="doosanPoCcamelContext" xmlns="http://camel.apache.org/schema/spring">
+
+    <route id="httpProxyRoute">
+      <from uri="servlet://?matchOnUriPrefix=true" id="proxyServlet"/>
+      <convertBodyTo type="java.lang.String"/>
+      <process ref="inspector" />
+      <choice>
+        <when>
+          <!-- Google Vision API -->
+          <simple>${header.CamelHttpPath} starts with 'google/'</simple>
+          <process ref="inspector" id="_process1"/>
+          <to uri="direct:google" id="googleProducer"/>
+        </when>
+        <when>
+          <!-- Azure Vision API -->
+          <simple>${header.CamelHttpPath} starts with 'azure/'</simple>
+          <process ref="inspector" id="_process2"/>
+          <to uri="direct:azure" id="azureProducer"/>
+        </when>
+      </choice>
+    </route>
+
+    <route id="googleProxyRoute">
+      <from uri="direct:google" id="googleProxy"/>
+      <setHeader headerName="PublicCloudUrl" id="setHeaderPublicCloudUrl">
+        <simple>netty4-http:https://vision.googleapis.com:443</simple>
+      </setHeader>
+      <setHeader headerName="CamelHttpQuery" id="setHeaderCamelHttpQuery">
+        <simple>key={{google.api.key}}</simple>
+      </setHeader>
+      <setHeader headerName="CamelHttpPath">
+        <groovy>request.headers['CamelHttpPath'] - 'google/'</groovy>
+      </setHeader>
+      <to uri="direct:httpClient" id="googleHttpClient"/>
+      <unmarshal>
+        <gzip/>
+      </unmarshal>
+    </route>
+
+    <route id="azureProxyRoute">
+      <from uri="direct:azure" id="azureProxy"/>
+      <setHeader headerName="PublicCloudUrl" id="azureSetHeaderPublicCloudUrl">
+        <simple>netty4-http:https://westcentralus.api.cognitive.microsoft.com:443</simple>
+      </setHeader>
+      <setHeader headerName="Ocp-Apim-Subscription-Key" id="azureSetHeaderPublicCloudUrl">
+        <simple>{{azure.api.key}}</simple>
+      </setHeader>
+      <setHeader headerName="CamelHttpPath">
+        <groovy>request.headers['CamelHttpPath'] - 'azure/'</groovy>
+      </setHeader>
+      <to uri="direct:httpClient" id="azureHttpClient"/>
+    </route>
+
+    <route id="publicCloudtRoute">
+      <from uri="direct:httpClient" id="publicCloudtHttpConsumer"/>
+      <toD uri="${header.PublicCloudUrl}?
+           useRelativePath=true&amp;
+           sync=true&amp;
+           ssl=true&amp;
+           sslContextParameters=#sslContextParameters&amp;
+           bridgeEndpoint=true&amp;
+           throwExceptionOnFailure=false&amp;
+           disconnect=true"
+           id="publicCloudHttpProducer"/>
+    </route>
+  </camelContext>
+</beans>
