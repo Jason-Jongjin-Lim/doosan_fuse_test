@@ -16,7 +16,7 @@ It is assumed that:
 
 The example can then be built and deployed using a single goal:
 
-    $ mvn fabric8:deploy -Dmysql-service-username=<username> -Dmysql-service-password=<password>
+    $ mvn -s configuration/settings.xml fabric8:deploy -Popenshift -DskipTests
 
 The `username` and `password` system properties correspond to the credentials
 used when deploying the MySQL database service.
