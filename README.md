@@ -1,4 +1,4 @@
-# Doosan OpenShift 3scale Fuse PoC API Proxy
+# Doosan Fuse API Proxy
 
 
 ### Building
