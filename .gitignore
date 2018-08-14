@@ -170,3 +170,6 @@ buildNumber.properties
 
 .idea
 
+src/data/
+src/test/java/
+src/test/resources/

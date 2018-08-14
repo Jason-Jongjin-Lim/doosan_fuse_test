@@ -14,7 +14,15 @@ spec:
           env:
           - name: SPRING_APPLICATION_JSON
             value: '{"server":{"undertow":{"io-threads":1, "worker-threads":2 }}}'
+          - name: GOOGLE_API_HOST
+            value: 'vision.googleapis.com'
           - name: GOOGLE_API_KEY
             value: 'AIzaSyCTK8TCA0-czKXZieYrgfZV5Qt2YSW0Iuk'
+          - name: AZURE_API_HOST
+            value: 'westcentralus.api.cognitive.microsoft.com'
           - name: AZURE_API_KEY
-            value: 'e9de70e2fef54f65acf3d39ac1b9e362'
+            value: '7a406668b7f64765bd8845d9a791478a'
+          - name: WATSON_API_HOST
+            value: 'gateway.watsonplatform.net'
+          - name: WATSON_API_KEY
+            value: 'hSnmMEPybSDVLsZuqZ14KJfiCi3QZ0Ij3ZdmJFmcXxlJ'

@@ -89,11 +89,11 @@
     <orderEntry type="library" name="Maven: io.swagger:swagger-parser:1.0.33" level="project" />
     <orderEntry type="library" name="Maven: org.slf4j:slf4j-ext:1.7.25" level="project" />
     <orderEntry type="library" name="Maven: commons-io:commons-io:2.6" level="project" />
-    <orderEntry type="library" name="Maven: org.apache.camel:camel-netty4-http-starter:2.21.0.fuse-000077-redhat-1" level="project" />
-    <orderEntry type="library" name="Maven: org.apache.camel:camel-netty4-http:2.21.0.fuse-000077-redhat-1" level="project" />
-    <orderEntry type="library" name="Maven: org.apache.camel:camel-netty4:2.21.0.fuse-000077-redhat-1" level="project" />
-    <orderEntry type="library" name="Maven: io.netty:netty-all:4.1.22.Final" level="project" />
-    <orderEntry type="library" name="Maven: commons-pool:commons-pool:1.6" level="project" />
+    <orderEntry type="library" name="Maven: org.apache.camel:camel-http4-starter:2.21.0.fuse-000077-redhat-1" level="project" />
+    <orderEntry type="library" name="Maven: org.apache.camel:camel-http4:2.21.0.fuse-000077-redhat-1" level="project" />
+    <orderEntry type="library" name="Maven: org.apache.httpcomponents:httpclient:4.5.5" level="project" />
+    <orderEntry type="library" name="Maven: org.apache.httpcomponents:httpcore:4.4.9" level="project" />
+    <orderEntry type="library" name="Maven: commons-codec:commons-codec:1.10" level="project" />
     <orderEntry type="library" name="Maven: org.apache.camel:camel-groovy-starter:2.21.0.fuse-000077-redhat-1" level="project" />
     <orderEntry type="library" name="Maven: org.apache.camel:camel-groovy:2.21.0.fuse-000077-redhat-1" level="project" />
     <orderEntry type="library" name="Maven: org.codehaus.groovy:groovy-all:2.4.15" level="project" />

@@ -1,14 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<beans xmlns="http://www.springframework.org/schema/beans" xmlns:spring="http://camel.apache.org/schema/spring"
+<beans xmlns="http://www.springframework.org/schema/beans"
        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
        xsi:schemaLocation="        http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd        http://camel.apache.org/schema/spring       http://camel.apache.org/schema/spring/camel-spring.xsd">
 
   <sslContextParameters id="sslContextParameters" xmlns="http://camel.apache.org/schema/spring">
-    <keyManagers keyPassword="123456">
-      <keyStore resource="KeyStore.jks"/>
-    </keyManagers>
     <trustManagers>
-      <keyStore resource="KeyStore.jks"/>
+      <keyStore resource="cacerts"/>
     </trustManagers>
   </sslContextParameters>
 
@@ -17,7 +14,7 @@
     <route id="httpProxyRoute">
       <from uri="servlet://?matchOnUriPrefix=true" id="proxyServlet"/>
       <convertBodyTo type="java.lang.String"/>
-      <process ref="inspector" />
+      <!--<process ref="inspector"/>-->
       <choice>
         <when>
           <!-- Google Vision API -->
@@ -31,13 +28,20 @@
           <process ref="inspector" id="_process2"/>
           <to uri="direct:azure" id="azureProducer"/>
         </when>
+        <when>
+          <!-- Watson Visual Recognition API -->
+          <simple>${header.CamelHttpPath} starts with 'watson/'</simple>
+          <to uri="direct:watson" id="watsonProducer"/>
+          <convertBodyTo type="java.lang.String"/>
+
+        </when>
       </choice>
     </route>
 
     <route id="googleProxyRoute">
       <from uri="direct:google" id="googleProxy"/>
       <setHeader headerName="PublicCloudUrl" id="setHeaderPublicCloudUrl">
-        <simple>netty4-http:https://vision.googleapis.com:443</simple>
+        <simple>http4:{{google.api.host}}:443</simple>
       </setHeader>
       <setHeader headerName="CamelHttpQuery" id="setHeaderCamelHttpQuery">
         <simple>key={{google.api.key}}</simple>
@@ -46,15 +50,12 @@
         <groovy>request.headers['CamelHttpPath'] - 'google/'</groovy>
       </setHeader>
       <to uri="direct:httpClient" id="googleHttpClient"/>
-      <unmarshal>
-        <gzip/>
-      </unmarshal>
     </route>
 
     <route id="azureProxyRoute">
       <from uri="direct:azure" id="azureProxy"/>
       <setHeader headerName="PublicCloudUrl" id="azureSetHeaderPublicCloudUrl">
-        <simple>netty4-http:https://westcentralus.api.cognitive.microsoft.com:443</simple>
+        <simple>http4:{{azure.api.host}}:443</simple>
       </setHeader>
       <setHeader headerName="Ocp-Apim-Subscription-Key" id="azureSetHeaderPublicCloudUrl">
         <simple>{{azure.api.key}}</simple>
@@ -63,6 +64,22 @@
         <groovy>request.headers['CamelHttpPath'] - 'azure/'</groovy>
       </setHeader>
       <to uri="direct:httpClient" id="azureHttpClient"/>
+    </route>
+
+    <route id="watsonProxyRoute">
+      <from uri="direct:watson" id="watsonProxy"/>
+      <setHeader headerName="PublicCloudUrl" id="watsonSetHeaderPublicCloudUrl">
+        <simple>http4:{{watson.api.host}}:443</simple>
+      </setHeader>
+      <setHeader headerName="Authorization" id="watsonSetHeaderAuthorization">
+        <groovy>'Basic ' + 'apikey:{{watson.api.key}}'.bytes.encodeBase64()</groovy>
+      </setHeader>
+      <log message="Authorization: ${header.Authorization}"/>
+      <setHeader headerName="CamelHttpPath">
+        <groovy>request.headers['CamelHttpPath'] - 'watson/'</groovy>
+      </setHeader>
+      <!--<process ref="inspector" id="_process3"/>-->
+      <to uri="direct:httpClient" id="watsonHttpClient"/>
     </route>
 
     <route id="publicCloudtRoute">
@@ -74,7 +91,8 @@
            sslContextParameters=#sslContextParameters&amp;
            bridgeEndpoint=true&amp;
            throwExceptionOnFailure=false&amp;
-           disconnect=true"
+           disconnect=true&amp;
+           useGlobalSslContext Parameters"
            id="publicCloudHttpProducer"/>
     </route>
   </camelContext>
