@@ -4,6 +4,7 @@ import org.apache.camel.Exchange;
 import org.apache.camel.Processor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import sun.misc.HexDumpEncoder;
 
@@ -13,6 +14,11 @@ import java.util.Collection;
 
 @Component
 public class Inspector implements Processor {
+
+
+  @Value("${JAVA_HOME}")
+  String javaHome;
+
 
   private static final Logger logger = LoggerFactory.getLogger(Inspector.class);
 

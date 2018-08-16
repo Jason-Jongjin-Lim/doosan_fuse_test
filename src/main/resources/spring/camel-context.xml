@@ -5,7 +5,7 @@
 
   <sslContextParameters id="sslContextParameters" xmlns="http://camel.apache.org/schema/spring">
     <trustManagers>
-      <keyStore resource="cacerts"/>
+      <keyStore resource="{{JAVA_HOME}}/jre/lib/security/cacerts"/>
     </trustManagers>
   </sslContextParameters>
 
@@ -19,13 +19,11 @@
         <when>
           <!-- Google Vision API -->
           <simple>${header.CamelHttpPath} starts with 'google/'</simple>
-          <process ref="inspector" id="_process1"/>
           <to uri="direct:google" id="googleProducer"/>
         </when>
         <when>
           <!-- Azure Vision API -->
           <simple>${header.CamelHttpPath} starts with 'azure/'</simple>
-          <process ref="inspector" id="_process2"/>
           <to uri="direct:azure" id="azureProducer"/>
         </when>
         <when>
@@ -40,8 +38,7 @@
         </when>
       </choice>
     </route>
-
-
+    
     <route id="googleProxyRoute">
       <from uri="direct:google" id="googleProxy"/>
       <setHeader headerName="PublicCloudUrl" id="setHeaderPublicCloudUrl">
@@ -106,7 +103,7 @@
       <setHeader headerName="CamelAwsS3Key">
         <groovy>request.headers.FileName ?: "unknown"</groovy>
       </setHeader>
-      <!--<process ref="inspector"/>-->
+      <process ref="inspector"/>
       <to uri="aws-s3:{{camel.component.aws-s3.configuration.bucket-name}}" id="awsS3Producer"/>
       <setHeader headerName="Content-Type">
         <constant>application/json</constant>
