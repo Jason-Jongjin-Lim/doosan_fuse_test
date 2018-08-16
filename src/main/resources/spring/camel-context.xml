@@ -32,11 +32,15 @@
           <!-- Watson Visual Recognition API -->
           <simple>${header.CamelHttpPath} starts with 'watson/'</simple>
           <to uri="direct:watson" id="watsonProducer"/>
-          <convertBodyTo type="java.lang.String"/>
-
+        </when>
+        <when>
+          <!-- File upload API -->
+          <simple>${header.CamelHttpPath} starts with 'upload'</simple>
+          <to uri="direct:aws" id="awsProducer"/>
         </when>
       </choice>
     </route>
+
 
     <route id="googleProxyRoute">
       <from uri="direct:google" id="googleProxy"/>
@@ -95,5 +99,25 @@
            useGlobalSslContext Parameters"
            id="publicCloudHttpProducer"/>
     </route>
+
+    <route id="awsS3ProducerRoute" autoStartup="true">
+      <from uri="direct:aws"/>
+      <to uri="direct:multipart"/>
+      <setHeader headerName="CamelAwsS3Key">
+        <groovy>request.headers.FileName ?: "unknown"</groovy>
+      </setHeader>
+      <!--<process ref="inspector"/>-->
+      <to uri="aws-s3:{{camel.component.aws-s3.configuration.bucket-name}}" id="awsS3Producer"/>
+      <setHeader headerName="Content-Type">
+        <constant>application/json</constant>
+      </setHeader>
+      <setHeader headerName="urlEncodedFileName">
+        <groovy>java.net.URLEncoder.encode(request.headers.CamelAwsS3Key, "UTF-8")</groovy>
+      </setHeader>
+      <setBody>
+        <simple>{"imageUrl": "https://{{aws.s3.object.host}}/${header.urlEncodedFileName}"}</simple>
+      </setBody>
+    </route>
+
   </camelContext>
 </beans>

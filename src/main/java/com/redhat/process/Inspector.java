@@ -7,6 +7,10 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 import sun.misc.HexDumpEncoder;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.Part;
+import java.util.Collection;
+
 @Component
 public class Inspector implements Processor {
 

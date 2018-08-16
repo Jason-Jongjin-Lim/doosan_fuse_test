@@ -83,6 +83,14 @@
       <groupId>org.apache.camel</groupId>
       <artifactId>camel-groovy-starter</artifactId>
     </dependency>
+    <dependency>
+      <groupId>org.apache.camel</groupId>
+      <artifactId>camel-aws-starter</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.apache.camel</groupId>
+      <artifactId>camel-mail-starter</artifactId>
+    </dependency>
 
     <!-- testing -->
     <dependency>
@@ -90,10 +98,6 @@
       <artifactId>spring-boot-starter-test</artifactId>
       <scope>test</scope>
     </dependency>
-    <!--<dependency>-->
-      <!--<groupId>org.apache.httpcomponents</groupId>-->
-      <!--<artifactId>httpclient</artifactId>-->
-    <!--</dependency>-->
   </dependencies>
 
   <build>

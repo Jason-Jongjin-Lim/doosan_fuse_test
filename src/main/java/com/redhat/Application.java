@@ -22,7 +22,7 @@ import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.ImportResource;
 
 @SpringBootApplication
-@ComponentScan({"com.redhat.process"})
+@ComponentScan({"com.redhat.process", "com.redhat.route"})
 @ImportResource({"classpath:spring/camel-context.xml"})
 public class Application extends SpringBootServletInitializer {
 
