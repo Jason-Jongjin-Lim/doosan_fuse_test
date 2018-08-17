@@ -13,8 +13,6 @@
 
     <route id="httpProxyRoute">
       <from uri="servlet://?matchOnUriPrefix=true" id="proxyServlet"/>
-      <convertBodyTo type="java.lang.String"/>
-      <!--<process ref="inspector"/>-->
       <choice>
         <when>
           <!-- Google Vision API -->
@@ -75,11 +73,9 @@
       <setHeader headerName="Authorization" id="watsonSetHeaderAuthorization">
         <groovy>'Basic ' + 'apikey:{{watson.api.key}}'.bytes.encodeBase64()</groovy>
       </setHeader>
-      <log message="Authorization: ${header.Authorization}"/>
       <setHeader headerName="CamelHttpPath">
         <groovy>request.headers['CamelHttpPath'] - 'watson/'</groovy>
       </setHeader>
-      <!--<process ref="inspector" id="_process3"/>-->
       <to uri="direct:httpClient" id="watsonHttpClient"/>
     </route>
 
