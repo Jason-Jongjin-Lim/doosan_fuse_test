@@ -103,9 +103,6 @@
       <setHeader headerName="CamelAwsS3Key">
         <groovy>request.headers.FileName ?: "unknown"</groovy>
       </setHeader>
-      <setHeader headerName="CamelAwsS3ContentLength">
-        <groovy>request.body.available()</groovy>
-      </setHeader>
       <to uri="aws-s3:{{camel.component.aws-s3.configuration.bucket-name}}" id="awsS3Producer"/>
       <setHeader headerName="Content-Type">
         <constant>application/json</constant>
