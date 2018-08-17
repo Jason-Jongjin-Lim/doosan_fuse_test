@@ -103,11 +103,11 @@
       <setHeader headerName="Content-Type">
         <constant>application/json</constant>
       </setHeader>
-      <setHeader headerName="urlEncodedFileName">
-        <groovy>java.net.URLEncoder.encode(request.headers.CamelAwsS3Key, "UTF-8")</groovy>
-      </setHeader>
       <setBody>
-        <simple>{"imageUrl": "https://{{aws.s3.object.host}}/${header.urlEncodedFileName}"}</simple>
+        <groovy>
+          def urlEncoded = java.net.URLEncoder.encode(request.headers.CamelAwsS3Key, "UTF-8")
+          """{"imageUrl": "https://{{aws.s3.object.host}}/${urlEncoded}"}"""
+        </groovy>
       </setBody>
     </route>
 
