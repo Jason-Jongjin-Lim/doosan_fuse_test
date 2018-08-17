@@ -13,7 +13,7 @@ spec:
               memory: 256Mi
           env:
           - name: SPRING_APPLICATION_JSON
-            value: '{"server":{"undertow":{"io-threads":1, "worker-threads":2 }}}'
+            value: '{"server":{"undertow":{"io-threads":2, "worker-threads":32 }}}'
           # Google
           - name: GOOGLE_API_HOST
             value: 'vision.googleapis.com'
