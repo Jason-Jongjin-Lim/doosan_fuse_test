@@ -1,0 +1,27 @@
+---
+apiVersion: v1
+kind: Service
+metadata:
+  annotations:
+    fabric8.io/git-commit: e1271bcc417db11f5c20c6d3b19fc68e28fecd33
+    fabric8.io/iconUrl: img/icons/camel.svg
+    fabric8.io/git-branch: master
+    prometheus.io/scrape: "true"
+    prometheus.io/port: "9779"
+  labels:
+    expose: "true"
+    app: doosan-poc-fuse
+    provider: fabric8
+    version: "1.0"
+    group: com.redhat
+  name: doosan-poc-fuse
+spec:
+  ports:
+  - name: http
+    port: 8080
+    protocol: TCP
+    targetPort: 8080
+  selector:
+    app: doosan-poc-fuse
+    provider: fabric8
+    group: com.redhat
