@@ -1,0 +1,20 @@
+kind: ImageStream
+apiVersion: v1
+metadata:
+  name: jboss-fuse70-java-openshift
+  annotations:
+    openshift.io/display-name: Red Hat Fuse 7.0 Java
+    openshift.io/provider-display-name: Red Hat, Inc.
+spec:
+  tags:
+  - name: '1.0'
+    annotations:
+      description: Red Hat Fuse 7.0 Java S2I images.
+      openshift.io/display-name: Red Hat Fuse 7.0 Java
+      iconClass: icon-rh-integration
+      tags: builder,jboss-fuse,java,xpaas,hidden
+      supports: jboss-fuse:7.0.0,java:8,xpaas:1.2
+      version: '1.0'
+    from:
+      kind: DockerImage
+      name: registry.access.redhat.com/fuse7/fuse-java-openshift:1.0

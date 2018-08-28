@@ -1,15 +1,4 @@
----
 apiVersion: v1
-kind: List
-items:
-- apiVersion: image.openshift.io/v1
-  kind: ImageStream
-  metadata:
-    name: doosan-poc-fuse
-  spec:
-    tags:
-    - from:
-        kind: ImageStreamImage
-        name: doosan-poc-fuse@sha256:35d94f4ce715967e93f5a9dcd7646a3780f240b62948eb9b225f97c900f9cb46
-        namespace: doosan
-      name: "1.0"
+kind: ImageStream
+metadata:
+  name: doosan-poc-fuse
