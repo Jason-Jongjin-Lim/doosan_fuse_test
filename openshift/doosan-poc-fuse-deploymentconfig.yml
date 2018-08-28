@@ -1,16 +1,14 @@
----
 apiVersion: apps.openshift.io/v1
 kind: DeploymentConfig
 metadata:
   annotations:
-    fabric8.io/git-commit: e1271bcc417db11f5c20c6d3b19fc68e28fecd33
     fabric8.io/iconUrl: img/icons/camel.svg
     fabric8.io/git-branch: master
-    fabric8.io/metrics-path: dashboard/file/camel-routes.json/?var-project=doosan-poc-fuse&var-version=1.0
+    fabric8.io/metrics-path: dashboard/file/camel-routes.json/?var-project=doosan-poc-fuse&var-version=latest
   labels:
     app: doosan-poc-fuse
     provider: fabric8
-    version: "1.0"
+    version: "latest"
     group: com.redhat
   name: doosan-poc-fuse
 spec:
@@ -27,20 +25,19 @@ spec:
   template:
     metadata:
       annotations:
-        fabric8.io/git-commit: e1271bcc417db11f5c20c6d3b19fc68e28fecd33
         fabric8.io/iconUrl: img/icons/camel.svg
         fabric8.io/git-branch: master
-        fabric8.io/metrics-path: dashboard/file/camel-routes.json/?var-project=doosan-poc-fuse&var-version=1.0
+        fabric8.io/metrics-path: dashboard/file/camel-routes.json/?var-project=doosan-poc-fuse&var-version=latest
       labels:
         app: doosan-poc-fuse
         provider: fabric8
-        version: "1.0"
+        version: "latest"
         group: com.redhat
     spec:
       containers:
       - env:
         - name: SPRING_APPLICATION_JSON
-          value: '{"server":{"undertow":{"io-threads":1, "worker-threads":2 }}}'
+          value: '{"server":{"undertow":{"io-threads":2, "worker-threads":32 }}}'
         - name: GOOGLE_API_HOST
           value: vision.googleapis.com
         - name: GOOGLE_API_KEY
@@ -57,8 +54,18 @@ spec:
           valueFrom:
             fieldRef:
               fieldPath: metadata.namespace
-        image: doosan-poc-fuse:1.0
-        imagePullPolicy: IfNotPresent
+        - name: AWS_ACCESS_KEY
+          value: AKIAILJZDAV6RHPUSRGQ
+        - name: AWS_SECRET_KEY
+          value: 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
+        - name: AWS_S3_REGION
+          value: AP_NORTHEAST_2
+        - name: AWS_S3_BUCKET_NAME
+          value: poc.doosan
+        - name: AWS_S3_OBJECT_HOST
+          value: s3.ap-northeast-2.amazonaws.com/poc.doosan
+        image: doosan-poc-fuse:latest
+        imagePullPolicy: Always
         livenessProbe:
           httpGet:
             path: /health
@@ -85,10 +92,10 @@ spec:
         resources:
           limits:
             cpu: "1.0"
-            memory: 256Mi
+            memory: 512Mi
           requests:
             cpu: "0.2"
-            memory: 256Mi
+            memory: 512Mi
         securityContext:
           privileged: false
   triggers:
@@ -99,5 +106,5 @@ spec:
       - spring-boot
       from:
         kind: ImageStreamTag
-        name: doosan-poc-fuse:1.0
+        name: doosan-poc-fuse:latest
     type: ImageChange
