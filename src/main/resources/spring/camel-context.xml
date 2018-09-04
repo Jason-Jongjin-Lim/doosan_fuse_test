@@ -56,8 +56,14 @@
       <setHeader headerName="PublicCloudUrl" id="azureSetHeaderPublicCloudUrl">
         <simple>http4:{{azure.api.host}}:443</simple>
       </setHeader>
+      <process ref="inspector" />
       <setHeader headerName="Ocp-Apim-Subscription-Key" id="azureSetHeaderPublicCloudUrl">
-        <simple>{{azure.api.key}}</simple>
+        <groovy>
+          switch(request.headers['CamelHttpPath']) {
+            case ~/azure\/vision\/.*$/ : '{{azure.vision.api.key}}'; break
+            case ~/azure\/face\/.*$/   : '{{azure.face.api.key}}'  ; break
+          }
+        </groovy>
       </setHeader>
       <setHeader headerName="CamelHttpPath">
         <groovy>request.headers['CamelHttpPath'] - 'azure/'</groovy>

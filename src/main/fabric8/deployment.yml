@@ -13,27 +13,29 @@ spec:
               memory: 256Mi
           env:
           - name: SPRING_APPLICATION_JSON
-            value: '{"server":{"undertow":{"io-threads":2, "worker-threads":32 }}}'
+            value: '{"server":{"undertow":{"io-threads":1, "worker-threads":32 }}}'
           # Google
           - name: GOOGLE_API_HOST
             value: 'vision.googleapis.com'
           - name: GOOGLE_API_KEY
-            value: 'AIzaSyCTK8TCA0-czKXZieYrgfZV5Qt2YSW0Iuk'
+            value: 'AIzaSyBQRNcCsmogHNa3nSpjkb0QjMaSCtoYwNE'
           # Azure
           - name: AZURE_API_HOST
-            value: 'westcentralus.api.cognitive.microsoft.com'
-          - name: AZURE_API_KEY
-            value: '7a406668b7f64765bd8845d9a791478a'
+            value: 'westus.api.cognitive.microsoft.com'
+          - name: AZURE_VISION_API_KEY
+            value: 'fa68084a415b459da982776dc6e94df6'
+          - name: AZURE_FACE_API_KEY
+            value: '869dc4745d174af983436758e6d9c384'
           # Watson
           - name: WATSON_API_HOST
             value: 'gateway.watsonplatform.net'
           - name: WATSON_API_KEY
-            value: 'hSnmMEPybSDVLsZuqZ14KJfiCi3QZ0Ij3ZdmJFmcXxlJ'
+            value: 'NlvPHMWCfUcwkcQ2n3I6yAqHNrn1LdUodK7Ejvqm1dHo'
           # AWS S3
           - name: AWS_ACCESS_KEY
-            value: 'AKIAILJZDAV6RHPUSRGQ'
+            value: 'AKIAILJZCAV6RHPUSRGQ'
           - name: AWS_SECRET_KEY
-            value: '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'
+            value: 'EpmJtylZWXLL9ksbfY5SEfEvOyoFTE7MxCKjYMmI'
           - name: AWS_S3_REGION
             value: 'AP_NORTHEAST_2'
           - name: AWS_S3_BUCKET_NAME
