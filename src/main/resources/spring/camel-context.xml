@@ -49,9 +49,11 @@
       </setHeader>
       <setHeader headerName="PublicCloudUrl" id="googleSetHeaderPublicCloudUrl">
         <groovy>
+          println request.headers['CamelHttpPath']
           switch(request.headers['CamelHttpPath']) {
-          case ~/^v1\/vision.*$/ : 'https4:vision.googleapis.com' ; break
           case ~/^v1\/text.*$/ : 'https4:texttospeech.googleapis.com'; break
+          case ~/^v1\/images.*$/ : 'https4:vision.googleapis.com' ; break
+          case ~/^v1\/.*$/ : 'https4:vision.googleapis.com' ; break
           }
         </groovy>
       </setHeader>
