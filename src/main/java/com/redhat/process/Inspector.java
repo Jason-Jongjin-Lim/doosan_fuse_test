@@ -25,14 +25,14 @@ public class Inspector implements Processor {
   @Override
   public void process(Exchange exchange) throws Exception {
 
-    byte[] body = exchange.getContext().getTypeConverter().mandatoryConvertTo(byte[].class,
-        exchange.getIn().getBody());
+    // byte[] body = exchange.getContext().getTypeConverter().mandatoryConvertTo(byte[].class,
+    //     exchange.getIn().getBody());
 
     HexDumpEncoder hexDump = new HexDumpEncoder();
 
-    logger.info("body dump :\n" + hexDump.encodeBuffer(body));
+    // logger.info("body dump :\n" + hexDump.encodeBuffer(exchange.getIn().getBody()));
 
-    exchange.getIn().setBody(body);
+    // exchange.getIn().setBody(body);
 
   }
 }

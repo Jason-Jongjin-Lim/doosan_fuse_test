@@ -7,38 +7,11 @@ spec:
           resources:
             requests:
               cpu: "0.2"
-              memory: 256Mi
+              memory: 512Mi
             limits:
               cpu: "1.0"
-              memory: 256Mi
-          env:
-          - name: SPRING_APPLICATION_JSON
-            value: '{"server":{"undertow":{"io-threads":1, "worker-threads":32 }}}'
-          # Google
-          - name: GOOGLE_API_HOST
-            value: 'vision.googleapis.com'
-          - name: GOOGLE_API_KEY
-            value: 'AIzaSyBQRNcCsmogHNa3nSpjkb0QjMaSCtoYwNE'
-          # Azure
-          - name: AZURE_API_HOST
-            value: 'westus.api.cognitive.microsoft.com'
-          - name: AZURE_VISION_API_KEY
-            value: 'fa68084a415b459da982776dc6e94df6'
-          - name: AZURE_FACE_API_KEY
-            value: '869dc4745d174af983436758e6d9c384'
-          # Watson
-          - name: WATSON_API_HOST
-            value: 'gateway.watsonplatform.net'
-          - name: WATSON_API_KEY
-            value: 'NlvPHMWCfUcwkcQ2n3I6yAqHNrn1LdUodK7Ejvqm1dHo'
-          # AWS S3
-          - name: AWS_ACCESS_KEY
-            value: 'AKIAILJZCAV6RHPUSRGQ'
-          - name: AWS_SECRET_KEY
-            value: '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'
-          - name: AWS_S3_REGION
-            value: 'AP_NORTHEAST_2'
-          - name: AWS_S3_BUCKET_NAME
-            value: 'poc.doosan'
-          - name: AWS_S3_OBJECT_HOST
-            value: 's3.ap-northeast-2.amazonaws.com/poc.doosan'
+              memory: 512Mi
+          envFrom:
+          - configMapRef:
+              name: doosan-poc-fuse
+

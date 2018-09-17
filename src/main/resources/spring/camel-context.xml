@@ -15,14 +15,19 @@
       <from uri="servlet://?matchOnUriPrefix=true" id="proxyServlet"/>
       <choice>
         <when>
-          <!-- Google Vision API -->
+          <!-- Google API -->
           <simple>${header.CamelHttpPath} starts with 'google/'</simple>
           <to uri="direct:google" id="googleProducer"/>
         </when>
         <when>
-          <!-- Azure Vision API -->
+          <!-- Azure  API -->
           <simple>${header.CamelHttpPath} starts with 'azure/'</simple>
           <to uri="direct:azure" id="azureProducer"/>
+        </when>
+        <when>
+          <!-- Bing  API -->
+          <simple>${header.CamelHttpPath} starts with 'bing/'</simple>
+          <to uri="direct:bing" id="bingProducer"/>
         </when>
         <when>
           <!-- Watson Visual Recognition API -->
@@ -36,38 +41,66 @@
         </when>
       </choice>
     </route>
-    
+
     <route id="googleProxyRoute">
       <from uri="direct:google" id="googleProxy"/>
-      <setHeader headerName="PublicCloudUrl" id="setHeaderPublicCloudUrl">
-        <simple>http4:{{google.api.host}}:443</simple>
+      <setHeader headerName="CamelHttpPath">
+        <groovy>request.headers['CamelHttpPath'] - 'google/'</groovy>
+      </setHeader>
+      <setHeader headerName="PublicCloudUrl" id="googleSetHeaderPublicCloudUrl">
+        <groovy>
+          switch(request.headers['CamelHttpPath']) {
+          case ~/^v1\/vision.*$/ : 'https4:vision.googleapis.com' ; break
+          case ~/^v1\/text.*$/ : 'https4:texttospeech.googleapis.com'; break
+          }
+        </groovy>
       </setHeader>
       <setHeader headerName="CamelHttpQuery" id="setHeaderCamelHttpQuery">
         <simple>key={{google.api.key}}</simple>
       </setHeader>
-      <setHeader headerName="CamelHttpPath">
-        <groovy>request.headers['CamelHttpPath'] - 'google/'</groovy>
-      </setHeader>
+
+
       <to uri="direct:httpClient" id="googleHttpClient"/>
     </route>
 
     <route id="azureProxyRoute">
       <from uri="direct:azure" id="azureProxy"/>
-      <setHeader headerName="PublicCloudUrl" id="azureSetHeaderPublicCloudUrl">
-        <simple>http4:{{azure.api.host}}:443</simple>
-      </setHeader>
       <setHeader headerName="CamelHttpPath">
         <groovy>request.headers['CamelHttpPath'] - 'azure/'</groovy>
+      </setHeader>
+      <setHeader headerName="PublicCloudUrl" id="azureSetHeaderPublicCloudUrl">
+        <groovy>
+          switch(request.headers['CamelHttpPath']) {
+          case ~/^vision\/.*$/ : 'https4:{{azure.api.host}}'; break
+          case ~/^face\/.*$/   : 'https4:{{azure.api.host}}' ; break
+          case ~/^sts\/.*$/    : 'https4:api.cognitive.microsoft.com' ; break
+          }
+        </groovy>
       </setHeader>
       <setHeader headerName="Ocp-Apim-Subscription-Key" id="azureSetHeaderPublicCloudUrl">
         <groovy>
           switch(request.headers['CamelHttpPath']) {
           case ~/^vision\/.*$/ : '{{azure.vision.api.key}}'; break
-          case ~/^face\/.*$/   : '{{azure.face.api.key}}'  ; break
+          case ~/^face\/.*$/   : '{{azure.face.api.key}}' ; break
+          case ~/^sts\/.*$/    : '{{azure.sts.api.key}}' ; break
           }
         </groovy>
       </setHeader>
+
       <to uri="direct:httpClient" id="azureHttpClient"/>
+    </route>
+
+    <route id="bingProxyRoute">
+      <from uri="direct:bing" id="bingProxy"/>
+      <setHeader headerName="CamelHttpPath">
+        <groovy>request.headers['CamelHttpPath'] - 'bing/'</groovy>
+      </setHeader>
+      <setHeader headerName="PublicCloudUrl" id="bingSetHeaderPublicCloudUrl">
+        <groovy>
+          'https4:speech.platform.bing.com'
+        </groovy>
+      </setHeader>
+      <to uri="direct:httpClient" id="bingHttpClient"/>
     </route>
 
     <route id="watsonProxyRoute">
@@ -86,6 +119,7 @@
 
     <route id="publicCloudtRoute">
       <from uri="direct:httpClient" id="publicCloudtHttpConsumer"/>
+      <process ref="inspector"/>
       <toD uri="${header.PublicCloudUrl}?
            useRelativePath=true&amp;
            sync=true&amp;
