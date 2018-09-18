@@ -128,8 +128,7 @@
            sslContextParameters=#sslContextParameters&amp;
            bridgeEndpoint=true&amp;
            throwExceptionOnFailure=false&amp;
-           disconnect=true&amp;
-           useGlobalSslContext Parameters"
+           disconnect=true"
            id="publicCloudHttpProducer"/>
     </route>
 
